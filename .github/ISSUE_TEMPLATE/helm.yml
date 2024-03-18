@@ -17,13 +17,13 @@ body:
       label: Issue submitter TODO list
       description: By you checking these checkboxes we can be sure you've done the essential things.
       options:
-        - label: I've looked up my issue in [FAQ](https://docs.kafka-ui.provectus.io/faq/common-problems)
+        - label: I've looked up my issue in [FAQ](https://ui.docs.kafbat.io/faq/common-problems)
           required: true
-        - label: I've searched for an already existing issues [here (legacy)](https://github.com/provectus/kafka-ui/issues) and [here](https://github.com/provectus/kafka-ui-charts/issues)
+        - label: I've searched for an already existing issues [here (legacy)](https://github.com/kafbat/kafka-ui/issues) and [here](https://github.com/kafbat/helm-charts/issues)
           required: true
         - label: I've tried installing latest charts and the issue still persists there
           required: true
-        - label: I'm running a supported version of the application & chart which is listed [here](https://github.com/provectus/kafka-ui/blob/master/SECURITY.md)
+        - label: I'm running a supported version of the application & chart which is listed [here](https://github.com/kafbat/kafka-ui/blob/master/.github/SECURITY.md)
           required: true
 
   - type: textarea
