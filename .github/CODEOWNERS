@@ -1,7 +1,7 @@
-*                           @Haarolean
+*                           @kafbat/maintainers
 
 # HELM CHARTS
-/charts/                    @provectus/kafka-devops
+/charts/                    @kafbat/devops
 
 # INFRA
-.github/workflows           @provectus/kafka-devops
+.github/workflows           @kafbat/devops

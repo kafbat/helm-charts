@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           helm_version_new=$(cat charts/kafka-ui/Chart.yaml  | grep version | awk  '{print $2}')
-          helm_version_old=$(curl -s https://raw.githubusercontent.com/provectus/kafka-ui-charts/main/charts/kafka-ui/Chart.yaml |   grep version | awk  '{print $2}' )
+          helm_version_old=$(curl -s https://raw.githubusercontent.com/kafbat/helm-charts/main/charts/kafka-ui/Chart.yaml |   grep version | awk  '{print $2}' )
           echo $helm_version_old
           echo $helm_version_new
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
