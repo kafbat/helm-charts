@@ -8,5 +8,5 @@ metadata:
     {{- include "kafka-ui.labels" . | nindent 4 }}
 data:
   config.yml: |-
-    {{- toYaml .Values.yamlApplicationConfig | nindent 4}}
+    {{- tpl (toYaml .Values.yamlApplicationConfig) . | nindent 4}}
 {{ end }}
