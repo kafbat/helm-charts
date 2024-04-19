@@ -48,17 +48,19 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "kafka-ui.imageName" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if or .Values.env  .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap}}
+          {{- if or .Values.env  .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
           env:
             {{- with .Values.env }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
-            {{- if or .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap}}
+            {{- if or .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
             - name: SPRING_CONFIG_ADDITIONAL-LOCATION
               {{- if .Values.yamlApplicationConfig }}
               value: /kafka-ui/config.yml
               {{- else if .Values.yamlApplicationConfigConfigMap }}
               value: /kafka-ui/{{ .Values.yamlApplicationConfigConfigMap.keyName | default "config.yml" }}
+              {{- else if .Values.yamlApplicationConfigSecret }}
+              value: /kafka-ui/{{ .Values.yamlApplicationConfigSecret.keyName | default "config.yml" }}
               {{- end }}
             {{- end }}
           {{- end }}
@@ -107,7 +109,7 @@ spec:
             timeoutSeconds: 10
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap}}
+          {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
           volumeMounts:
             {{- with .Values.volumeMounts }} 
               {{- toYaml . | nindent 12 }}
@@ -120,8 +122,12 @@ spec:
             - name: kafka-ui-yaml-conf-configmap
               mountPath: /kafka-ui/
             {{- end }}
+            {{- if .Values.yamlApplicationConfigSecret}}
+            - name: kafka-ui-yaml-conf-secret
+              mountPath: /kafka-ui/
+            {{- end }}
           {{- end }}
-      {{- if or .Values.yamlApplicationConfig .Values.volumes .Values.yamlApplicationConfigConfigMap}}
+      {{- if or .Values.yamlApplicationConfig .Values.volumes .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
       volumes:
         {{- with .Values.volumes }}
           {{- toYaml . | nindent 8 }}
@@ -135,6 +141,11 @@ spec:
         - name: kafka-ui-yaml-conf-configmap
           configMap: 
             name: {{ .Values.yamlApplicationConfigConfigMap.name }}
+        {{- end }}
+        {{- if .Values.yamlApplicationConfigSecret}}
+        - name: kafka-ui-yaml-conf-secret
+          secret:
+            secretName: {{ .Values.yamlApplicationConfigSecret.name }}
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
