@@ -40,6 +40,11 @@ yamlApplicationConfigConfigMap:
   {}
   # keyName: config.yml
   # name: configMapName
+yamlApplicationConfigSecret:
+  {}
+  # keyName: config.yml
+  # name: secretName
+
 existingSecret: ""
 envs:
   secret: {}
