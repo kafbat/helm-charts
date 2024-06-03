@@ -64,6 +64,20 @@ spec:
               {{- end }}
             {{- end }}
           {{- end }}
+          {{- range $key, $value := .Values.envs.secretMappings }}
+            - name: {{ $key }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "Missing required value envs.secretMappings.[].name" $value.name }}
+                  key: {{ required "Missing required value envs.secretMappings.[].keyName"  $value.keyName }}
+          {{- end }}
+          {{- range $key, $value := .Values.envs.configMappings }}
+            - name: {{ $key }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ required "Missing required value envs.configMappings.[].name" $value.name }}
+                  key: {{ required "Missing required value envs.configMappings.[].keyName"  $value.keyName }}
+          {{- end }}
           envFrom:
             {{- if .Values.existingConfigMap }}
             - configMapRef:

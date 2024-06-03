@@ -49,6 +49,14 @@ existingSecret: ""
 envs:
   secret: {}
   config: {}
+  secretMappings: {}
+    #ENV_NAME:
+    #  name: kubernetes-secret-name
+    #  keyName: kubernetes-secret-key
+  configMappings: {}
+    #ENV_NAME:
+    #  name: kubernetes-configmap-name
+    #  keyName: kubernetes-configmap-key
 
 networkPolicy:
   enabled: false
