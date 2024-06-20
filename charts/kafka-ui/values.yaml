@@ -168,3 +168,21 @@ volumeMounts: {}
 volumes: {}
 
 hostAliases: {}
+
+## Specify additional containers in extraContainers.
+## For example, to add an authentication proxy to a kafka-ui pod.
+extraContainers: |
+# - name: proxy
+#   image: quay.io/gambol99/keycloak-proxy:latest
+#   args:
+#   - -provider=github
+#   - -client-id=
+#   - -client-secret=
+#   - -github-org=<ORG_NAME>
+#   - -email-domain=*
+#   - -cookie-secret=
+#   - -http-address=http://0.0.0.0:4181
+#   - -upstream-url=http://127.0.0.1:3000
+#   ports:
+#     - name: proxy-web
+#       containerPort: 4181
