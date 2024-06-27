@@ -141,6 +141,9 @@ spec:
               mountPath: /kafka-ui/
             {{- end }}
           {{- end }}
+        {{- with .Values.extraContainers }}
+        {{ tpl . $ | nindent 8 }}
+        {{- end }}
       {{- if or .Values.yamlApplicationConfig .Values.volumes .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
       volumes:
         {{- with .Values.volumes }}
