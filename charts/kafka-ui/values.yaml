@@ -120,6 +120,9 @@ ingress:
   # Annotations for the Ingress
   annotations: {}
 
+  # Labels for the Ingress
+  labels: {}
+
   # ingressClassName for the Ingress
   ingressClassName: ""
 
