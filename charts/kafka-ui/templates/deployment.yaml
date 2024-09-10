@@ -78,6 +78,7 @@ spec:
                   name: {{ required "Missing required value envs.configMappings.[].name" $value.name }}
                   key: {{ required "Missing required value envs.configMappings.[].keyName"  $value.keyName }}
           {{- end }}
+          {{- if or .Values.existingConfigMap .Values.envs.config .Values.existingSecret .Values.envs.secret }}
           envFrom:
             {{- if .Values.existingConfigMap }}
             - configMapRef:
@@ -94,7 +95,8 @@ spec:
             {{- if .Values.envs.secret}}
             - secretRef:
                 name: {{ include "kafka-ui.fullname" . }}
-            {{- end}}    
+            {{- end}}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
