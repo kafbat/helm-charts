@@ -16,6 +16,9 @@ spec:
   selector:
     matchLabels:
       {{- include "kafka-ui.selectorLabels" . | nindent 6 }}
+  {{- if .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
   template:
     metadata:
       annotations:
