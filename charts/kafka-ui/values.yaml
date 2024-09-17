@@ -197,3 +197,4 @@ extraContainers: |
 #   ports:
 #     - name: proxy-web
 #       containerPort: 4181
+revisionHistoryLimit: null
