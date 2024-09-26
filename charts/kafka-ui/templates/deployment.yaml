@@ -51,7 +51,10 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: {{ include "kafka-ui.imageName" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- if or .Values.env  .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
+          {{- if or .Values.env
+              .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret
+              (.Values.envs).secretMappings (.Values.envs).configMappings
+          }}
           env:
             {{- with .Values.env }}
               {{- toYaml . | nindent 12 }}
@@ -66,20 +69,20 @@ spec:
               value: /kafka-ui/{{ .Values.yamlApplicationConfigSecret.keyName | default "config.yml" }}
               {{- end }}
             {{- end }}
-          {{- end }}
-          {{- range $key, $value := .Values.envs.secretMappings }}
+            {{- range $key, $value := .Values.envs.secretMappings }}
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
                   name: {{ required "Missing required value envs.secretMappings.[].name" $value.name }}
                   key: {{ required "Missing required value envs.secretMappings.[].keyName"  $value.keyName }}
-          {{- end }}
-          {{- range $key, $value := .Values.envs.configMappings }}
+            {{- end }}
+            {{- range $key, $value := .Values.envs.configMappings }}
             - name: {{ $key }}
               valueFrom:
                 configMapKeyRef:
                   name: {{ required "Missing required value envs.configMappings.[].name" $value.name }}
                   key: {{ required "Missing required value envs.configMappings.[].keyName"  $value.keyName }}
+            {{- end }}
           {{- end }}
           {{- if or .Values.existingConfigMap .Values.envs.config .Values.existingSecret .Values.envs.secret }}
           envFrom:
