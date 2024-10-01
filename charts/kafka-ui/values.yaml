@@ -86,6 +86,10 @@ podLabels: {}
 ##
 annotations: {}
 
+## Labels to be added to kafka-ui Deployment
+##
+labels: {}
+
 ## Set field schema as HTTPS for readines and liveness probe
 ##
 probes:
