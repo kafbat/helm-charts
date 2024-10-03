@@ -1,0 +1,51 @@
+name: 'Update README from values.yaml metadata'
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "charts/**"
+
+permissions: {} # Remove all permissions by default
+
+jobs:
+  update-readme-metadata:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Install readme-generator-for-helm
+        run: npm install -g @bitnami/readme-generator-for-helm
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necessary for getting a complete history for diffs
+
+      - name: Get modified charts
+        id: get-modified-charts
+        run: |
+          paths=$(git diff --name-only origin/main... --name-only | grep 'charts/.*/values.yaml' | cut -d/ -f1,2 | uniq | tr '\n' ' ')
+          echo "Modified charts: $paths"
+          echo "paths=${paths}" >> $GITHUB_ENV  # Using ENV as this is now within the same job
+
+      - name: Execute readme-generator-for-helm
+        if: env.paths != ''  # Ensure there are paths to proceed
+        run: |
+          IFS=' ' read -ra ADDR <<< "$paths"
+          echo "Updating READMEs for modified charts: ${ADDR[@]}"
+          for chart in "${ADDR[@]}"; do
+            echo "Updating README.md for ${chart}"
+            readme-generator --values "${chart}/values.yaml" --readme "${chart}/README.md"
+            if [[ $? -ne 0 ]]; then
+              echo "Error: Failed to update README for ${chart}"
+              exit 1
+            fi
+            # fix schema for nullable
+            # cat <<< $(jq '(..|objects|select(.nullable)).type |= ["string","null"]' "${chart}/values.schema.json") > "${chart}/values.schema.json"
+          done
+
+      - name: Commit and Push Changes
+        if: env.paths != ''  # Only commit if there are changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: Update README.md for modified charts
