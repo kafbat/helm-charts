@@ -1,1 +1,1 @@
-Please refer to our [documentation](https://ui.docs.kafbat.io/configuration/helm-charts) to get some info on our helm charts.
+## Parameters
