@@ -158,6 +158,9 @@ podLabels: {}
 ## @param annotations [object] Annotations to be added to kafka-ui Deployment
 annotations: {}
 
+## @param labels [object] Labels to be added to kafka-ui Deployment
+labels: {}
+
 ## @param probes.useHttpsScheme Set field schema as HTTPS for readines and liveness probe
 ##
 probes:

@@ -50,6 +50,7 @@
 | `podAnnotations`        | Annotations for Kafka-UI pods                             | `{}`    |
 | `podLabels`             | Extra labels for Kafka-UI pods                            | `{}`    |
 | `annotations`           | Annotations to be added to kafka-ui Deployment            | `{}`    |
+| `labels`                | Labels to be added to kafka-ui Deployment                 | `{}`    |
 | `probes.useHttpsScheme` | Set field schema as HTTPS for readines and liveness probe | `false` |
 
 ### Security Context
