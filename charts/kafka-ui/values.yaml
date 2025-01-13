@@ -186,6 +186,7 @@ securityContext:
 ## Kafka-UI service parameters
 ##
 service:
+
   ## @param service.type Kafka-UI service type
   type: ClusterIP
   ## @param service.port Kafka-UI pod port number
@@ -194,6 +195,8 @@ service:
   # loadBalancerIP: 10.11.12.13
   # if you want to force a specific nodePort. Must be use with service.type=NodePort
   # nodePort:
+  ## @param service.labels kafka-UI service labels
+  labels: {}
 
 ## Kafka-UI Ingress configuration
 ## ref: http://kubernetes.io/docs/concepts/services-networking/ingress/
