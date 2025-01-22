@@ -1,89 +1,132 @@
-## Parameters
+#### Kafbat UI (ex. kafka-ui) is a free, open-source web UI to monitor and manage Apache Kafka clusters.
 
-### Common
+[Kafbat UI](https://github.com/kafbat/kafka-ui) is a simple tool that makes your data flows observable, helps find and troubleshoot issues faster and deliver optimal performance. Its lightweight dashboard makes it easy to track key metrics of your Kafka clusters - Brokers, Topics, Partitions, Production, and Consumption.
 
-| Name               | Description                                | Value |
-| ------------------ | ------------------------------------------ | ----- |
-| `replicaCount`     | Number of Kafka-UI replicas to deploy      | `1`   |
-| `image.registry`   | image registry                             | `""`  |
-| `image.repository` | image repository                           | `""`  |
-| `image.pullPolicy` | image pull policy                          | `""`  |
-| `image.tag`        | image tag (immutable tags are recommended) | `""`  |
-| `imagePullSecrets` | Docker registry secret names as an array   | `[]`  |
-| `nameOverride`     | String to partially override chart name    | `""`  |
-| `fullnameOverride` | String to fully override app name          | `""`  |
+<i>
+Kafbat UI, developed by <b>Kafbat</b>*, proudly carries forward the legacy of the UI Apache Kafka project.
+Our dedication is reflected in the continuous evolution of the project, ensuring adherence to its foundational vision while adapting to meet modern demands.
+We extend our gratitude to Provectus for their past support in groundbreaking work, which serves as a cornerstone for our ongoing innovation and dedication.
 
-### ServiceAccount configuration
+<b>*</b> - The <b>Kafbat</b> team comprises key contributors from the project's inception, bringing a wealth of experience and insight to this renewed endeavor.
+</i>
 
-| Name                         | Description                                          | Value  |
-| ---------------------------- | ---------------------------------------------------- | ------ |
-| `serviceAccount.name`        | The name of the ServiceAccount to use.               | `""`   |
-| `serviceAccount.create`      | Specifies whether a ServiceAccount should be created | `true` |
-| `serviceAccount.annotations` | Additional Service Account annotations               | `{}`   |
+# Interface
 
-### Application configuration
+![Interface](https://raw.githubusercontent.com/kafbat/kafka-ui/images/overview.gif)
 
-| Name                             | Description                                                                                                                                        | Value |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
-| `existingConfigMap`              | Name of the existing ConfigMap with kafbat-ui environment variables                                                                                | `""`  |
-| `yamlApplicationConfig`          | Kafbat-UI config in Yaml format                                                                                                                    | `{}`  |
-| `yamlApplicationConfigConfigMap` | Map with name and keyName keys, name refers to the existing ConfigMap, keyName refers to the ConfigMap key with Kafbat-UI config in Yaml format    | `{}`  |
-| `yamlApplicationConfigSecret`    | Secret with name and keyName keys, name refers to the existing ConfigMap, keyName refers to the ConfigMap key with Kafbat-UI config in Yaml format | `{}`  |
-| `existingSecret`                 | Name of the existing Secret with Kafbat-UI environment variables                                                                                   | `""`  |
-| `envs.secret`                    | Set of the sensitive environment variables to pass to Kafbat-UI                                                                                    | `{}`  |
-| `envs.config`                    | Set of the environment variables to pass to Kafbat-UI                                                                                              | `{}`  |
-| `envs.secretMappings`            | The mapping of existing secret to env variable.                                                                                                    | `{}`  |
-| `envs.configMappings`            | The mapping of configmap and keyName to get env variable.                                                                                          | `{}`  |
-| `env`                            | Envs to be added to the Kafka-UI container                                                                                                         | `{}`  |
-| `resources`                      | Set Kafka-UI container requests and limits for different resources like CPU or memory (essential for production workloads)                         | `{}`  |
-| `initContainers`                 | Add additional init containers to the Kafka-UI pods                                                                                                | `{}`  |
-| `volumeMounts`                   | Optionally specify additional volumeMounts for the kafka-UI container                                                                              | `{}`  |
-| `volumes`                        | Optionally specify additional volumes for the Kafka-UI pods                                                                                        | `{}`  |
-| `hostAliases`                    | Kafka-UI pods host aliases                                                                                                                         | `{}`  |
-| `extraContainers`                | Specify additional containers in extraContainers.                                                                                                  | `""`  |
+# Features
+* **Multi-Cluster Management** — monitor and manage all your clusters in one place
+* **Performance Monitoring with Metrics Dashboard** —  track key Kafka metrics with a lightweight dashboard
+* **View Kafka Brokers** — view topic and partition assignments, controller status
+* **View Kafka Topics** — view partition count, replication status, and custom configuration
+* **View Consumer Groups** — view per-partition parked offsets, combined and per-partition lag
+* **Browse Messages** — browse messages with JSON, plain text, and Avro encoding
+* **Dynamic Topic Configuration** — create and configure new topics with dynamic configuration
+* **Configurable Authentification** — [secure](https://ui.docs.kafbat.io/configuration/authentication) your installation with optional Github/Gitlab/Google OAuth 2.0
+* **Custom serialization/deserialization plugins** - [use](https://ui.docs.kafbat.io/configuration/serialization-serde) a ready-to-go serde for your data like AWS Glue or Smile, or code your own!
+* **Role based access control** - [manage permissions](https://ui.docs.kafbat.io/configuration/rbac-role-based-access-control) to access the UI with granular precision
+* **Data masking** - [obfuscate](https://ui.docs.kafbat.io/configuration/data-masking) sensitive data in topic messages
 
-### Network Policies
+## Feature overview
 
-| Name                    | Description                                               | Value   |
-| ----------------------- | --------------------------------------------------------- | ------- |
-| `networkPolicy.enabled` | Specifies whether a NetworkPolicy should be created       | `false` |
-| `podAnnotations`        | Annotations for Kafka-UI pods                             | `{}`    |
-| `podLabels`             | Extra labels for Kafka-UI pods                            | `{}`    |
-| `annotations`           | Annotations to be added to kafka-ui Deployment            | `{}`    |
-| `labels`                | Labels to be added to kafka-ui Deployment                 | `{}`    |
-| `probes.useHttpsScheme` | Set field schema as HTTPS for readines and liveness probe | `false` |
+<details>
+    <summary>Click here for the feature overview</summary>
 
-### Security Context
+# The Interface
+Kafbat UI wraps major functions of Apache Kafka with an intuitive user interface.
 
-| Name                 | Description                                                                         | Value |
-| -------------------- | ----------------------------------------------------------------------------------- | ----- |
-| `podSecurityContext` | The security settings that you specify for a Pod apply to all Containers in the Pod | `{}`  |
-| `securityContext`    | The security settings that you specify for a Kafka-UI container                     | `{}`  |
+![Interface](documentation/images/Interface.gif)
 
-### Traffic Exposure Parameters
+## Topics
+Kafbat UI makes it easy for you to create topics in your browser by several clicks,
+pasting your own parameters, and viewing topics in the list.
 
-| Name                       | Description                                                                                                                      | Value       |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `service.type`             | Kafka-UI service type                                                                                                            | `ClusterIP` |
-| `service.port`             | Kafka-UI pod port number                                                                                                         | `80`        |
-| `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`        |
-| `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
-| `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`        |
-| `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`        |
-| `ingress.path`             | Default path for the ingress record                                                                                              | `/`         |
-| `ingress.pathType`         | Ingress path type                                                                                                                | `Prefix`    |
-| `ingress.host`             | Default hostname for the ingress record                                                                                          | `""`        |
-| `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                        | `false`     |
-| `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`        |
-| `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`        |
-| `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`        |
-| `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)             | `{}`        |
+![Create Topic](documentation/images/Create_topic_kafka-ui.gif)
 
-### Scheduling
+It's possible to jump from connectors view to corresponding topics and from a topic to consumers (back and forth) for more convenient navigation.
+connectors, overview topic settings.
 
-| Name                   | Description                                                             | Value |
-| ---------------------- | ----------------------------------------------------------------------- | ----- |
-| `nodeSelector`         | Node labels for Kafka-UI pods assignment                                | `{}`  |
-| `tolerations`          | Tolerations for Kafka-UI pods assignment                                | `[]`  |
-| `affinity`             | Affinity for Kafka-UI pods assignment                                   | `{}`  |
-| `revisionHistoryLimit` | Specify how many old ReplicaSets for this Deployment you want to retain | `nil` |
+![Connector_Topic_Consumer](documentation/images/Connector_Topic_Consumer.gif)
+
+### Messages
+Let's say we want to produce messages for our topic. With the Kafbat UI we can send or write data/messages to the Kafka topics without effort by specifying parameters, and viewing messages in the list.
+
+![Produce Message](documentation/images/Create_message_kafka-ui.gif)
+
+## Schema registry
+There are 3 supported types of schemas: Avro®, JSON Schema, and Protobuf schemas.
+
+![Create Schema Registry](documentation/images/Create_schema.gif)
+
+Before producing avro/protobuf encoded messages, you have to add a schema for the topic in Schema Registry. Now all these steps are easy to do
+with a few clicks in a user-friendly interface.
+
+![Avro Schema Topic](documentation/images/Schema_Topic.gif)
+
+</details>
+
+# Getting Started
+
+To run Kafbat UI, you can use either a pre-built Docker image or build it (or a jar file) yourself.
+
+## Quick start (Demo run)
+
+```
+docker run -it -p 8080:8080 -e DYNAMIC_CONFIG_ENABLED=true image: ghcr.io/kafbat/kafka-ui
+```
+
+Then access the web UI at [http://localhost:8080](http://localhost:8080)
+
+The command is sufficient to try things out. When you're done trying things out, you can proceed with a [persistent installation](https://ui.docs.kafbat.io/quick-start/persistent-start)
+
+## Persistent installation
+
+```
+services:
+  kafbat-ui:
+    container_name: kafbat-ui
+    image: ghcr.io/kafbat/kafka-ui:latest
+    ports:
+      - 8080:8080
+    environment:
+      DYNAMIC_CONFIG_ENABLED: 'true'
+    volumes:
+      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+```
+
+Please refer to our [configuration](https://ui.docs.kafbat.io/configuration/configuration-file) page to proceed with further app configuration.
+
+## Some useful configuration related links
+
+[Web UI Cluster Configuration Wizard](https://ui.docs.kafbat.io/configuration/configuration-wizard)
+
+[Configuration file explanation](https://ui.docs.kafbat.io/configuration/configuration-file)
+
+[Docker Compose examples](https://ui.docs.kafbat.io/configuration/compose-examples)
+
+[Misc configuration properties](https://ui.docs.kafbat.io/configuration/misc-configuration-properties)
+
+## Helm charts
+
+[Quick start](https://ui.docs.kafbat.io/configuration/helm-charts/quick-start)
+
+## Building from sources
+
+[Quick start](https://ui.docs.kafbat.io/development/building/prerequisites) with building
+
+## Liveliness and readiness probes
+Liveliness and readiness endpoint is at `/actuator/health`.<br/>
+Info endpoint (build info) is located at `/actuator/info`.
+
+# Configuration options
+
+All the environment variables/config properties could be found [here](https://ui.docs.kafbat.io/configuration/misc-configuration-properties).
+
+# Contributing
+
+Please refer to [contributing guide](https://ui.docs.kafbat.io/development/contributing), we'll guide you from there.
+
+# Support
+
+As we're fully independent, team members contribute in their free time.
+Your support is crucial for us, if you wish to sponsor us, take a look [here](https://github.com/sponsors/kafbat) 

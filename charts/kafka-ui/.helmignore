@@ -22,4 +22,4 @@
 *.tmproj
 .vscode/
 example/
-README.md
+CONFIGURATION.md
