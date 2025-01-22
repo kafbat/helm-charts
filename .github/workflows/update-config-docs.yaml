@@ -34,8 +34,8 @@ jobs:
           IFS=' ' read -ra ADDR <<< "$paths"
           echo "Updating READMEs for modified charts: ${ADDR[@]}"
           for chart in "${ADDR[@]}"; do
-            echo "Updating README.md for ${chart}"
-            readme-generator --values "${chart}/values.yaml" --readme "${chart}/README.md"
+            echo "Updating CONFIGURATION.md for ${chart}"
+            readme-generator --values "${chart}/values.yaml" --readme "${chart}/CONFIGURATION.md"
             if [[ $? -ne 0 ]]; then
               echo "Error: Failed to update README for ${chart}"
               exit 1
@@ -48,4 +48,4 @@ jobs:
         if: env.paths != ''  # Only commit if there are changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: Update README.md for modified charts
+          commit_message: Update CONFIGURATION.md for modified charts
