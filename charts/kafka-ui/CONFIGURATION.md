@@ -65,7 +65,8 @@
 | Name                       | Description                                                                                                                      | Value       |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
 | `service.type`             | Kafka-UI service type                                                                                                            | `ClusterIP` |
-| `service.port`             | Kafka-UI pod port number                                                                                                         | `80`        |
+| `service.port`             | Kafka-UI service port number                                                                                                     | `80`        |
+| `service.labels`           | Kafka-UI service labels                                                                                                          | `{}`        |
 | `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`        |
 | `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
 | `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`        |
