@@ -170,17 +170,19 @@ probes:
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext [object] The security settings that you specify for a Pod apply to all Containers in the Pod
 podSecurityContext:
-  {}
-  # fsGroup: 2000
+   fsGroup: 2000
 ## @param securityContext [object] The security settings that you specify for a Kafka-UI container
 securityContext:
-  {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false # https://github.com/kafbat/kafka-ui/issues/78
+  runAsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
 
 ## @section Traffic Exposure Parameters
 ## Kafka-UI service parameters
