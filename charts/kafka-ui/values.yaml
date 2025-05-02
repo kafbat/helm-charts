@@ -186,6 +186,8 @@ securityContext:
 ## Kafka-UI service parameters
 ##
 service:
+  ##  @param service.labels [object] Labels for the Service
+  labels: { }
   ## @param service.type Kafka-UI service type
   type: ClusterIP
   ## @param service.port Kafka-UI pod port number
