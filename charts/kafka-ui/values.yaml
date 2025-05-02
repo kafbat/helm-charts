@@ -254,6 +254,12 @@ autoscaling:
   # targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
+## @param podDisruptionBudget Setup podDisruptionBudget for Kafka-UI
+## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+podDisruptionBudget: {}
+#  minAvailable: 0
+#  maxUnavailable: NULL
+
 ## @param nodeSelector Node labels for Kafka-UI pods assignment
 ## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
 ##

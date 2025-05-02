@@ -1,0 +1,14 @@
+{{- if .Values.podDisruptionBudget.enabled -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kafka-ui.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "kafka-ui.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "kafka-ui.selectorLabels" . | nindent 6 }}
+{{- toYaml (omit .Values.podDisruptionBudget "enabled") | indent 2 }}
+{{- end }}
