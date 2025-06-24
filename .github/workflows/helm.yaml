@@ -13,10 +13,12 @@ jobs:
       - uses: actions/checkout@v3
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
-      - name: login to Github Packages
+
+      - name: Login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
-      - uses: actions/checkout@v2
-      - uses: docker://ghcr.io/yannh/kubeconform:latest
+
+      - name: Setup kubeconform
+        uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
           entrypoint: '/kubeconform'
           args: "-summary -output json kubeconfigs/"
