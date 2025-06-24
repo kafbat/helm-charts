@@ -13,8 +13,13 @@ jobs:
       - uses: actions/checkout@v3
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
-      - name: Setup Kubeval
-        uses: lra/setup-kubeval@v1.0.1
+      - name: login to Github Packages
+        run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - uses: actions/checkout@v2
+      - uses: docker://ghcr.io/yannh/kubeconform:latest
+        with:
+          entrypoint: '/kubeconform'
+          args: "-summary -output json kubeconfigs/"
       #check, was helm version increased in Chart.yaml?
       - name: Check version
         shell: bash
@@ -28,9 +33,28 @@ jobs:
         shell: bash
         run: |
           sed -i "s@enabled: false@enabled: true@g" charts/kafka-ui/values.yaml
-          K8S_VERSIONS=$(git ls-remote --refs --tags https://github.com/kubernetes/kubernetes.git | cut -d/ -f3 | grep -e '^v1\.[0-9]\{2\}\.[0]\{1,2\}$' | grep -v -e  '^v1\.1[0-7]\{1\}' | cut -c2-)
-          echo "NEXT K8S VERSIONS ARE GOING TO BE TESTED: $K8S_VERSIONS"
+          K8S_VERSIONS=$(
+            git ls-remote --refs --tags https://github.com/kubernetes/kubernetes.git |
+            cut -d/ -f3                              | # v1.31.0, v1.31.0^{}, …
+            grep -E  '^v1\.[0-9]{2}\.0$'             | # v1.19.0 … v1.33.0
+            grep -vE '^v1\.1[0-8]\.0$'               | # 1.10-1.18
+            sort -Vu                                 | # unique/sort
+            sed 's/^v//'                               # remove prefix 
+          )
           echo ""
+          for version in $K8S_VERSIONS
+            do
+              printf '\n=== Kubernetes v%s ===\n' "$version"
+              helm template \
+                --kube-version "$version" \
+                --set ingress.enabled=true \
+                /charts/kafka-ui \
+                -f charts/kafka-ui/values.yaml |
+              kubeconform \
+                --strict \
+                --summary \
+                --kubernetes-version "$version"
+            done
           for version in $K8S_VERSIONS
             do
               echo $version;
