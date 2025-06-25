@@ -21,7 +21,7 @@ jobs:
         uses: docker://ghcr.io/yannh/kubeconform:latest
         with:
           entrypoint: '/kubeconform'
-          args: "-summary -output json tmp/"
+          args: "-summary -output text"
       #check, was helm version increased in Chart.yaml?
       - name: Check version
         shell: bash
