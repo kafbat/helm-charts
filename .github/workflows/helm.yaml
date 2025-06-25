@@ -14,8 +14,12 @@ jobs:
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
 
-      - name: Login to Github Packages
-        run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
+      - name: Login to ghcr.io
+        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # infered from @v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       #check, was helm version increased in Chart.yaml?
       - name: Check version
@@ -28,7 +32,7 @@ jobs:
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
 
       - name: Pull kubeconform image
-        run: docker pull ghcr.io/yannh/kubeconform:latest
+        run: docker pull ghcr.io/yannh/kubeconform:sha256:85dbef6b4b312b99133decc9c6fc9495e9fc5f92293d4ff3b7e1b30f5611823c
 
       - name: Run kubeconform
         shell: bash
