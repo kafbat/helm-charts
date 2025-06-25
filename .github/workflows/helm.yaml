@@ -14,13 +14,6 @@ jobs:
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
 
-      - name: Login to ghcr.io
-        uses: docker/login-action@74a5d142397b4f367a81961eba4e8cd7edddf772 # infered from @v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       #check, was helm version increased in Chart.yaml?
       - name: Check version
         shell: bash
