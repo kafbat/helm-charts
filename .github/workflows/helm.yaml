@@ -26,10 +26,14 @@ jobs:
           echo $helm_version_old
           echo $helm_version_new
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
+
+      - name: Pull kubeconform image
+        run: docker pull ghcr.io/yannh/kubeconform:latest
+
       - name: Run kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:latest
         shell: bash
         run: |
+          set -euo pipefail
           sed -i "s@enabled: false@enabled: true@g" charts/kafka-ui/values.yaml
           K8S_VERSIONS=$(
             git ls-remote --refs --tags https://github.com/kubernetes/kubernetes.git |
@@ -40,21 +44,12 @@ jobs:
             sed 's/^v//'                               # remove prefix 
           )
           echo ""
-          for version in $K8S_VERSIONS
-            do
-              printf '\n=== Kubernetes v%s ===\n' "$version"
-              helm template \
-                --kube-version "$version" \
-                --set ingress.enabled=true \
-                /charts/kafka-ui \
-                -f charts/kafka-ui/values.yaml |
-              kubeconform \
-                --strict \
-                --summary \
-                --kubernetes-version "$version"
-            done
-          for version in $K8S_VERSIONS
-            do
-              echo $version;
-              helm template --kube-version $version --set ingress.enabled=true charts/kafka-ui -f charts/kafka-ui/values.yaml | kubeval --additional-schema-locations https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v $version;
-            done
+          for version in $K8S_VERSIONS; do
+            helm template \
+              --kube-version "$version" \
+              --set ingress.enabled=true \
+              charts/kafka-ui \
+              -f charts/kafka-ui/values.yaml | \
+            docker run --rm -i ghcr.io/yannh/kubeconform:latest \
+              -strict -summary -kubernetes-version "$version" -
+          done
