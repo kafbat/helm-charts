@@ -17,11 +17,6 @@ jobs:
       - name: Login to Github Packages
         run: echo "${{ github.token }}" | docker login https://ghcr.io -u ${GITHUB_ACTOR} --password-stdin
 
-      - name: Setup kubeconform
-        uses: docker://ghcr.io/yannh/kubeconform:latest
-        with:
-          entrypoint: '/kubeconform'
-          args: "-summary -output text"
       #check, was helm version increased in Chart.yaml?
       - name: Check version
         shell: bash
@@ -32,6 +27,7 @@ jobs:
           echo $helm_version_new
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
       - name: Run kubeconform
+        uses: docker://ghcr.io/yannh/kubeconform:latest
         shell: bash
         run: |
           sed -i "s@enabled: false@enabled: true@g" charts/kafka-ui/values.yaml
