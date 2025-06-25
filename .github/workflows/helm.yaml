@@ -32,7 +32,7 @@ jobs:
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
 
       - name: Pull kubeconform image
-        run: docker pull ghcr.io/yannh/kubeconform:sha256:85dbef6b4b312b99133decc9c6fc9495e9fc5f92293d4ff3b7e1b30f5611823c
+        run: docker pull ghcr.io/yannh/kubeconform:v0.7.0@sha256:7426d17ca19f3731d2a6287c868005f052f2682800141f20e83d3109f5c8faa1
 
       - name: Run kubeconform
         shell: bash
