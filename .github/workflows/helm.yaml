@@ -51,5 +51,6 @@ jobs:
               charts/kafka-ui \
               -f charts/kafka-ui/values.yaml | \
             docker run --rm -i ghcr.io/yannh/kubeconform:latest \
-              -strict -summary -kubernetes-version "$version" -
+              -strict -summary -kubernetes-version "$version" - | \
+            sed "s/^/v${version}: /"
           done
