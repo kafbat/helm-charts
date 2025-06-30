@@ -108,15 +108,20 @@ hostAliases: {}
 ## @param extraContainers Specify additional containers in extraContainers.
 ## For example, to add an authentication proxy to a kafka-ui pod.
 extraContainers: |
-  - name: probe-killer
-    image: busybox
-    args: ["sh","-c","sleep 3600"]
-    startupProbe:            # makes 1.15 and older fail
-      httpGet:
-        path: /
-        port: 80
-      periodSeconds: 5
-      failureThreshold: 6
+# - name: proxy
+#   image: quay.io/gambol99/keycloak-proxy:latest
+#   args:
+#   - -provider=github
+#   - -client-id=
+#   - -client-secret=
+#   - -github-org=<ORG_NAME>
+#   - -email-domain=*
+#   - -cookie-secret=
+#   - -http-address=http://0.0.0.0:4181
+#   - -upstream-url=http://127.0.0.1:3000
+#   ports:
+#     - name: proxy-web
+#       containerPort: 4181
 
 ## @section Network Policies
 ## Ref: https://kubernetes.io/docs/concepts/services-networking/network-policies/
@@ -184,7 +189,7 @@ service:
   ##  @param service.labels [object] Labels for the Service
   labels: { }
   ## @param service.type Kafka-UI service type
-  type: ClusterIP
+  type: test
   ## @param service.port Kafka-UI pod port number
   port: 80
   # In case of service type LoadBalancer, you can specify reserved static IP
