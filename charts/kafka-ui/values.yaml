@@ -189,7 +189,7 @@ service:
   ##  @param service.labels [object] Labels for the Service
   labels: { }
   ## @param service.type Kafka-UI service type
-  type: ClusterI
+  type: ClusterIP
   ## @param service.port Kafka-UI pod port number
   port: 80
   # In case of service type LoadBalancer, you can specify reserved static IP
