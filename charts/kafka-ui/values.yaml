@@ -105,6 +105,23 @@ volumes: {}
 ##
 hostAliases: {}
 
+## @section DNS Configuration for Pods
+## @param dnsConfig Specifies the DNS parameters of a pod
+## ref: https://kubernetes.io/docs/concepts/services-networking/dns-pod-container/#pod-dns-config
+dnsConfig: {}
+  ## @param dnsConfig.nameservers [list] A list of IP addresses that will be used as DNS servers for the Pod.
+  # nameservers:
+  #   - 1.2.3.4
+  ## @param dnsConfig.searches [list] A list of DNS search domains for hostname lookup in the Pod.
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  ## @param dnsConfig.options [list] A list of objects where each object may have a `name` property (required) and a `value` property (optional). Options are used to configure the behavior of the DNS resolver.
+  # options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
+
 ## @param extraContainers Specify additional containers in extraContainers.
 ## For example, to add an authentication proxy to a kafka-ui pod.
 extraContainers: |
