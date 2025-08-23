@@ -62,23 +62,23 @@
 
 ### Traffic Exposure Parameters
 
-| Name                       | Description                                                                                                                      | Value      |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ---------- |
-| `service.labels`           | Labels for the Service                                                                                                           | `{}`       |
-| `service.type`             | Kafka-UI service type                                                                                                            | `ClusterI` |
-| `service.port`             | Kafka-UI pod port number                                                                                                         | `80`       |
-| `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`       |
-| `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`       |
-| `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`       |
-| `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`       |
-| `ingress.path`             | Default path for the ingress record                                                                                              | `/`        |
-| `ingress.pathType`         | Ingress path type                                                                                                                | `Prefix`   |
-| `ingress.host`             | Default hostname for the ingress record                                                                                          | `""`       |
-| `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                        | `false`    |
-| `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`       |
-| `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`       |
-| `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`       |
-| `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)             | `{}`       |
+| Name                       | Description                                                                                                                      | Value       |
+| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `service.type`             | Kafka-UI service type                                                                                                            | `ClusterIP` |
+| `service.port`             | Kafka-UI service port number                                                                                                     | `80`        |
+| `service.labels`           | Kafka-UI service labels                                                                                                          | `{}`        |
+| `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`        |
+| `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
+| `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`        |
+| `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`        |
+| `ingress.path`             | Default path for the ingress record                                                                                              | `/`         |
+| `ingress.pathType`         | Ingress path type                                                                                                                | `Prefix`    |
+| `ingress.host`             | Default hostname for the ingress record                                                                                          | `""`        |
+| `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                        | `false`     |
+| `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`        |
+| `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`        |
+| `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`        |
+| `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)             | `{}`        |
 
 ### Scheduling
 
