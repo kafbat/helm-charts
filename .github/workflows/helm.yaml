@@ -13,8 +13,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
-      - name: Setup Kubeval
-        uses: lra/setup-kubeval@v1.0.1
+
       #check, was helm version increased in Chart.yaml?
       - name: Check version
         shell: bash
@@ -24,15 +23,30 @@ jobs:
           echo $helm_version_old
           echo $helm_version_new
           if [[ "$helm_version_new" > "$helm_version_old" ]]; then exit 0 ; else exit 1 ; fi
-      - name: Run kubeval
+
+      - name: Pull kubeconform image
+        run: docker pull ghcr.io/yannh/kubeconform:v0.7.0@sha256:7426d17ca19f3731d2a6287c868005f052f2682800141f20e83d3109f5c8faa1
+
+      - name: Run kubeconform
         shell: bash
         run: |
+          set -euo pipefail
           sed -i "s@enabled: false@enabled: true@g" charts/kafka-ui/values.yaml
-          K8S_VERSIONS=$(git ls-remote --refs --tags https://github.com/kubernetes/kubernetes.git | cut -d/ -f3 | grep -e '^v1\.[0-9]\{2\}\.[0]\{1,2\}$' | grep -v -e  '^v1\.1[0-7]\{1\}' | cut -c2-)
-          echo "NEXT K8S VERSIONS ARE GOING TO BE TESTED: $K8S_VERSIONS"
+          K8S_VERSIONS=$(
+            git ls-remote --refs --tags https://github.com/kubernetes/kubernetes.git |
+            cut -d/ -f3                              | # keep only the tag name, e.g. v1.32.0, v1.32.0^{}
+            grep -E '^v1\.[0-9]{2,3}\.0$'            | # select release tags v1.xx.0 or v1.xxx.0
+            sort -Vu                                 | # remove duplicates (^{} entries) and sort ascending
+            sed 's/^v//'                               # strip the leading v → 1.32.0, 1.33.0, …
+          )
           echo ""
-          for version in $K8S_VERSIONS
-            do
-              echo $version;
-              helm template --kube-version $version --set ingress.enabled=true charts/kafka-ui -f charts/kafka-ui/values.yaml | kubeval --additional-schema-locations https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master --strict -v $version;
-            done
+          for version in $K8S_VERSIONS; do
+            helm template \
+              --kube-version "$version" \
+              --set ingress.enabled=true \
+              charts/kafka-ui \
+              -f charts/kafka-ui/values.yaml | \
+            docker run --rm -i ghcr.io/yannh/kubeconform:latest \
+              -strict -summary -ignore-missing-schemas -kubernetes-version "$version" - | \
+            sed "s/^/v${version}: /"
+          done
