@@ -118,9 +118,7 @@ spec:
               {{- if .Values.probes.useHttpsScheme }}
               scheme: HTTPS
               {{- end }}
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
+            {{- toYaml .Values.probes.liveness | nindent 12 }}
           readinessProbe:
             httpGet:
               {{- $contextPath := .Values.envs.config.SERVER_SERVLET_CONTEXT_PATH | default "" | printf "%s/actuator/health" | urlParse }}
@@ -129,9 +127,7 @@ spec:
               {{- if .Values.probes.useHttpsScheme }}
               scheme: HTTPS
               {{- end }}
-            initialDelaySeconds: 60
-            periodSeconds: 30
-            timeoutSeconds: 10
+            {{- toYaml .Values.probes.readiness | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
