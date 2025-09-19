@@ -44,14 +44,20 @@
 
 ### Network Policies
 
-| Name                    | Description                                               | Value   |
-| ----------------------- | --------------------------------------------------------- | ------- |
-| `networkPolicy.enabled` | Specifies whether a NetworkPolicy should be created       | `false` |
-| `podAnnotations`        | Annotations for Kafka-UI pods                             | `{}`    |
-| `podLabels`             | Extra labels for Kafka-UI pods                            | `{}`    |
-| `annotations`           | Annotations to be added to kafka-ui Deployment            | `{}`    |
-| `labels`                | Labels to be added to kafka-ui Deployment                 | `{}`    |
-| `probes.useHttpsScheme` | Set field schema as HTTPS for readines and liveness probe | `false` |
+| Name                                   | Description                                               | Value   |
+| -------------------------------------- | --------------------------------------------------------- | ------- |
+| `networkPolicy.enabled`                | Specifies whether a NetworkPolicy should be created       | `false` |
+| `podAnnotations`                       | Annotations for Kafka-UI pods                             | `{}`    |
+| `podLabels`                            | Extra labels for Kafka-UI pods                            | `{}`    |
+| `annotations`                          | Annotations to be added to kafka-ui Deployment            | `{}`    |
+| `labels`                               | Labels to be added to kafka-ui Deployment                 | `{}`    |
+| `probes.useHttpsScheme`                | Set field schema as HTTPS for readines and liveness probe | `false` |
+| `probes.liveness.initialDelaySeconds`  | Initial delay seconds for liveness probe                  | `10`    |
+| `probes.liveness.periodSeconds`        | Period seconds for liveness probe                         | `30`    |
+| `probes.liveness.timeoutSeconds`       | Timeout seconds for liveness probe                        | `10`    |
+| `probes.readiness.initialDelaySeconds` | Initial delay seconds for readiness probe                 | `10`    |
+| `probes.readiness.periodSeconds`       | Period seconds for readiness probe                        | `30`    |
+| `probes.readiness.timeoutSeconds`      | Timeout seconds for readiness probe                       | `10`    |
 
 ### Security Context
 
@@ -64,9 +70,9 @@
 
 | Name                       | Description                                                                                                                      | Value       |
 | -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `service.labels`           | Labels for the Service                                                                                                           | `{}`        |
 | `service.type`             | Kafka-UI service type                                                                                                            | `ClusterIP` |
-| `service.port`             | Kafka-UI service port number                                                                                                     | `80`        |
-| `service.labels`           | Kafka-UI service labels                                                                                                          | `{}`        |
+| `service.port`             | Kafka-UI pod port number                                                                                                         | `80`        |
 | `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`        |
 | `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
 | `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`        |
