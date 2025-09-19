@@ -165,6 +165,20 @@ labels: {}
 ##
 probes:
   useHttpsScheme: false
+  liveness:
+    ## @param probes.liveness.initialDelaySeconds Initial delay seconds for liveness probe
+    initialDelaySeconds: 10
+    ## @param probes.liveness.periodSeconds Period seconds for liveness probe
+    periodSeconds: 30
+    ## @param probes.liveness.timeoutSeconds Timeout seconds for liveness probe
+    timeoutSeconds: 10
+  readiness:
+    ## @param probes.readiness.initialDelaySeconds Initial delay seconds for readiness probe
+    initialDelaySeconds: 10
+    ## @param probes.readiness.periodSeconds Period seconds for readiness probe
+    periodSeconds: 30
+    ## @param probes.readiness.timeoutSeconds Timeout seconds for readiness probe
+    timeoutSeconds: 10
 
 ## @section Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
