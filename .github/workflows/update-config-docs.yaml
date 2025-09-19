@@ -46,6 +46,6 @@ jobs:
 
       - name: Commit and Push Changes
         if: env.paths != ''  # Only commit if there are changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+        uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: Update CONFIGURATION.md for modified charts
