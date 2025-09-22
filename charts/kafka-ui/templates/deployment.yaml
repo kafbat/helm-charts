@@ -60,38 +60,38 @@ spec:
           }}
           env:
             {{- with .Values.env }}
-              {{- toYaml . | nindent 12 }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
             {{- if or .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
             - name: SPRING_CONFIG_ADDITIONAL-LOCATION
               {{- if .Values.yamlApplicationConfig }}
               value: /kafka-ui/config.yml
               {{- else if .Values.yamlApplicationConfigConfigMap }}
-              value: /kafka-ui/{{ .Values.yamlApplicationConfigConfigMap.keyName | default "config.yml" }}
+              value: /kafka-ui/{{ tpl .Values.yamlApplicationConfigConfigMap.keyName . | default "config.yml" }}
               {{- else if .Values.yamlApplicationConfigSecret }}
-              value: /kafka-ui/{{ .Values.yamlApplicationConfigSecret.keyName | default "config.yml" }}
+              value: /kafka-ui/{{ tpl .Values.yamlApplicationConfigSecret.keyName . | default "config.yml" }}
               {{- end }}
             {{- end }}
             {{- range $key, $value := .Values.envs.secretMappings }}
             - name: {{ $key }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ required "Missing required value envs.secretMappings.[].name" $value.name }}
-                  key: {{ required "Missing required value envs.secretMappings.[].keyName"  $value.keyName }}
+                  name: {{ tpl (required "Missing required value envs.secretMappings.[].name" $value.name) $ | quote }}
+                  key: {{ tpl (required "Missing required value envs.secretMappings.[].keyName" $value.keyName) $ | quote }}
             {{- end }}
             {{- range $key, $value := .Values.envs.configMappings }}
             - name: {{ $key }}
               valueFrom:
                 configMapKeyRef:
-                  name: {{ required "Missing required value envs.configMappings.[].name" $value.name }}
-                  key: {{ required "Missing required value envs.configMappings.[].keyName"  $value.keyName }}
+                  name: {{ tpl (required "Missing required value envs.configMappings.[].name" $value.name) $ | quote }}
+                  key: {{ tpl (required "Missing required value envs.configMappings.[].keyName"  $value.keyName) $ | quote }}
             {{- end }}
           {{- end }}
           {{- if or .Values.existingConfigMap .Values.envs.config .Values.existingSecret .Values.envs.secret }}
           envFrom:
             {{- if .Values.existingConfigMap }}
             - configMapRef:
-                name: {{ .Values.existingConfigMap }}
+                name: {{ tpl .Values.existingConfigMap . | quote }}
             {{- end }}
             {{- if .Values.envs.config }}
             - configMapRef:
@@ -99,7 +99,7 @@ spec:
             {{- end }}
             {{- if .Values.existingSecret }}
             - secretRef:
-                name: {{ .Values.existingSecret }}
+                name: {{ tpl .Values.existingSecret . }}
             {{- end }}
             {{- if .Values.envs.secret}}
             - secretRef:
@@ -132,7 +132,7 @@ spec:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
           volumeMounts:
-            {{- with .Values.volumeMounts }} 
+            {{- with .Values.volumeMounts }}
               {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- if .Values.yamlApplicationConfig }}
@@ -153,23 +153,23 @@ spec:
         {{- end }}
       {{- if or .Values.yamlApplicationConfig .Values.volumes .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
       volumes:
-        {{- with .Values.volumes }}
+        {{- with tpl .Values.volumes . }}
           {{- toYaml . | nindent 8 }}
         {{- end }}
         {{- if .Values.yamlApplicationConfig }}
         - name: kafka-ui-yaml-conf
-          configMap: 
+          configMap:
             name: {{ include "kafka-ui.fullname" . }}-fromvalues
         {{- end }}
         {{- if .Values.yamlApplicationConfigConfigMap}}
         - name: kafka-ui-yaml-conf-configmap
-          configMap: 
-            name: {{ .Values.yamlApplicationConfigConfigMap.name }}
+          configMap:
+            name: {{ tpl .Values.yamlApplicationConfigConfigMap.name . }}
         {{- end }}
         {{- if .Values.yamlApplicationConfigSecret}}
         - name: kafka-ui-yaml-conf-secret
           secret:
-            secretName: {{ .Values.yamlApplicationConfigSecret.name }}
+            secretName: {{ tpl .Values.yamlApplicationConfigSecret.name . }}
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
