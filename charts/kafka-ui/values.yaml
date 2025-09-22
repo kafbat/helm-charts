@@ -69,12 +69,14 @@ envs:
   ## @param envs.config Set of the environment variables to pass to Kafbat-UI
   config: {}
   ## @param envs.secretMappings The mapping of existing secret to env variable.
-  secretMappings: {}
+  secretMappings:
+    {}
     #ENV_NAME:
     #  name: kubernetes-secret-name
     #  keyName: kubernetes-secret-key
   ## @param envs.configMappings  The mapping of configmap and keyName to get env variable.
-  configMappings: {}
+  configMappings:
+    {}
     #ENV_NAME:
     #  name: kubernetes-configmap-name
     #  keyName: kubernetes-configmap-key
@@ -234,7 +236,6 @@ ingress:
   ##
   path: "/"
 
-
   ## @param ingress.pathType Ingress path type
   pathType: "Prefix"
 
@@ -285,3 +286,17 @@ affinity: {}
 
 ## @param revisionHistoryLimit [nullable] Specify how many old ReplicaSets for this Deployment you want to retain
 revisionHistoryLimit: null
+
+# Pod Disruption Budget: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+podDisruptionBudget:
+  enabled: false
+  spec:
+    minAvailable: "50%"
+
+# Topology Spread Constraints: https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+topologySpreadConstraints:
+  enabled: false
+  maxSkew: 1
+  topologyKey: topology.kubernetes.io/zone
+  minDomains: 2
+  whenUnsatisfiable: DoNotSchedule # Must be DoNotSchedule if minDomains > 1
