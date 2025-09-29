@@ -76,7 +76,11 @@ This allows us to check if the registry of the image is specified or not.
 {{- $repository := .Values.image.repository -}}
 {{- $tag := .Values.image.tag | default .Chart.AppVersion -}}
 {{- if $registryName }}
+{{- if contains "@sha256" $tag }}
+{{- printf "%s/%s%s" $registryName $repository $tag -}}
+{{- else }}
 {{- printf "%s/%s:%s" $registryName $repository $tag -}}
+{{- end }}
 {{- else }}
 {{- printf "%s:%s" $repository $tag -}}
 {{- end }}
