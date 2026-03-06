@@ -44,7 +44,7 @@ spec:
     - group: ''
       kind: Service
       name: {{ include "kafka-ui.fullname" $ }}
-      port: {{ tpl ($.Values.service.port | default "80" | quote) $ }}
+	  port: {{ (tpl (default "80" ($.Values.service.port)) $) | int }}
       weight: 1
     {{- end }}
     {{- if $route.filters }}
