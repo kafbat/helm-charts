@@ -59,9 +59,6 @@ spec:
               (.Values.envs).secretMappings (.Values.envs).configMappings
           }}
           env:
-            {{- with .Values.env }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
             {{- if or .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
             - name: SPRING_CONFIG_ADDITIONAL-LOCATION
               {{- if .Values.yamlApplicationConfig }}
@@ -71,6 +68,9 @@ spec:
               {{- else if .Values.yamlApplicationConfigSecret }}
               value: /kafka-ui/{{ .Values.yamlApplicationConfigSecret.keyName | default "config.yml" }}
               {{- end }}
+            {{- end }}
+            {{- with .Values.env }}
+              {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- range $key, $value := .Values.envs.secretMappings }}
             - name: {{ $key }}
