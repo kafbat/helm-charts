@@ -1,0 +1,11 @@
+{{- if .Values.podDisruptionBudget.enabled -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: {{ include "kafka-ui.fullname" . }}
+spec:
+  {{- toYaml .Values.podDisruptionBudget.spec | nindent 2 }}
+  selector:
+    matchLabels:
+      {{- include "kafka-ui.selectorLabels" . | nindent 6 }}
+{{- end -}}
