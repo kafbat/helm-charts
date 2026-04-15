@@ -64,9 +64,9 @@ spec:
               {{- if .Values.yamlApplicationConfig }}
               value: /kafka-ui/config.yml
               {{- else if .Values.yamlApplicationConfigConfigMap }}
-              value: /kafka-ui/{{ tpl .Values.yamlApplicationConfigConfigMap.keyName . | default "config.yml" }}
+              value: /kafka-ui/{{ tpl (default "config.yml" .Values.yamlApplicationConfigConfigMap.keyName) . }}
               {{- else if .Values.yamlApplicationConfigSecret }}
-              value: /kafka-ui/{{ tpl .Values.yamlApplicationConfigSecret.keyName . | default "config.yml" }}
+              value: /kafka-ui/{{ tpl (default "config.yml" .Values.yamlApplicationConfigSecret.keyName) . }}
               {{- end }}
             {{- end }}
             {{- with .Values.env }}
@@ -142,7 +142,7 @@ spec:
           {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
           volumeMounts:
             {{- with .Values.volumeMounts }}
-              {{- toYaml . | nindent 12 }}
+              {{- tpl (toYaml .) $ | nindent 12 }}
             {{- end }}
             {{- if .Values.yamlApplicationConfig }}
             - name: kafka-ui-yaml-conf
@@ -162,8 +162,8 @@ spec:
         {{- end }}
       {{- if or .Values.yamlApplicationConfig .Values.volumes .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
       volumes:
-        {{- with tpl .Values.volumes . }}
-          {{- toYaml . | nindent 8 }}
+        {{- with .Values.volumes }}
+          {{- tpl (toYaml .) $ | nindent 8 }}
         {{- end }}
         {{- if .Values.yamlApplicationConfig }}
         - name: kafka-ui-yaml-conf
