@@ -99,7 +99,7 @@ spec:
             {{- end }}
             {{- if .Values.existingSecret }}
             - secretRef:
-                name: {{ tpl .Values.existingSecret . }}
+                name: {{ tpl .Values.existingSecret . | quote }}
             {{- end }}
             {{- if .Values.envs.secret}}
             - secretRef:
@@ -173,12 +173,12 @@ spec:
         {{- if .Values.yamlApplicationConfigConfigMap}}
         - name: kafka-ui-yaml-conf-configmap
           configMap:
-            name: {{ tpl .Values.yamlApplicationConfigConfigMap.name . }}
+            name: {{ tpl .Values.yamlApplicationConfigConfigMap.name . | quote }}
         {{- end }}
         {{- if .Values.yamlApplicationConfigSecret}}
         - name: kafka-ui-yaml-conf-secret
           secret:
-            secretName: {{ tpl .Values.yamlApplicationConfigSecret.name . }}
+            secretName: {{ tpl .Values.yamlApplicationConfigSecret.name . | quote }}
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
