@@ -173,12 +173,12 @@ spec:
         {{- if .Values.yamlApplicationConfigConfigMap}}
         - name: kafka-ui-yaml-conf-configmap
           configMap:
-            name: {{ tpl .Values.yamlApplicationConfigConfigMap.name . | quote }}
+            name: {{ tpl (required "Missing required value yamlApplicationConfigConfigMap/name" .Values.yamlApplicationConfigConfigMap.name) . | quote }}
         {{- end }}
         {{- if .Values.yamlApplicationConfigSecret}}
         - name: kafka-ui-yaml-conf-secret
           secret:
-            secretName: {{ tpl .Values.yamlApplicationConfigSecret.name . | quote }}
+            secretName: {{ tpl (required "Missing required value yamlApplicationConfigSecret/name" .Values.yamlApplicationConfigSecret.name) . | quote }}
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}
