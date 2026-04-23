@@ -19,6 +19,8 @@ imagePullSecrets: []
 nameOverride: ""
 ## @param fullnameOverride String to fully override app name
 fullnameOverride: ""
+## @param extraManifests Arbitrary Kubernetes manifests
+extraManifests: []
 
 ## @section ServiceAccount configuration
 serviceAccount:
@@ -294,3 +296,4 @@ affinity: {}
 
 ## @param revisionHistoryLimit [nullable] Specify how many old ReplicaSets for this Deployment you want to retain
 revisionHistoryLimit: null
+

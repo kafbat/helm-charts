@@ -12,6 +12,7 @@
 | `imagePullSecrets` | Docker registry secret names as an array   | `[]`  |
 | `nameOverride`     | String to partially override chart name    | `""`  |
 | `fullnameOverride` | String to fully override app name          | `""`  |
+| `extraManifests`   | Arbitrary Kubernetes manifests             | `[]`  |
 
 ### ServiceAccount configuration
 
