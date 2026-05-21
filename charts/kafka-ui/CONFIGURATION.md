@@ -81,6 +81,7 @@
 | `ingress.pathType`         | Ingress path type                                                                                                                | `Prefix`    |
 | `ingress.host`             | Default hostname for the ingress record                                                                                          | `""`        |
 | `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                        | `false`     |
+| `ingress.tls.host`         | Optional host value for TLS certificate used by the ingress, value of `ingress.host` is used if not defined                      | `""`        |
 | `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`        |
 | `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`        |
 | `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`        |
