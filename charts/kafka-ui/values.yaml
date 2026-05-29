@@ -179,22 +179,31 @@ probes:
     periodSeconds: 30
     ## @param probes.readiness.timeoutSeconds Timeout seconds for readiness probe
     timeoutSeconds: 10
+  startup:
+    ## @param probes.startup.failureThreshold Failure threshold for startup probe
+    failureThreshold: 5
+    ## @param probes.startup.periodSeconds Period seconds for startup probe
+    periodSeconds: 40
+    ## @param probes.startup.timeoutSeconds Timeout seconds for startup probe
+    timeoutSeconds: 10
 
 ## @section Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext [object] The security settings that you specify for a Pod apply to all Containers in the Pod
 podSecurityContext:
-  {}
-  # fsGroup: 2000
+   fsGroup: 2000
 ## @param securityContext [object] The security settings that you specify for a Kafka-UI container
 securityContext:
-  {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: false # https://github.com/kafbat/kafka-ui/issues/78
+  runAsGroup: 2000
+  runAsNonRoot: true
+  runAsUser: 1000
+  seccompProfile:
+    type: RuntimeDefault
 
 ## @section Traffic Exposure Parameters
 ## Kafka-UI service parameters

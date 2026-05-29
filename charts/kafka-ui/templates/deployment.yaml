@@ -59,9 +59,6 @@ spec:
               (.Values.envs).secretMappings (.Values.envs).configMappings
           }}
           env:
-            {{- with .Values.env }}
-              {{- toYaml . | nindent 12 }}
-            {{- end }}
             {{- if or .Values.yamlApplicationConfig .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
             - name: SPRING_CONFIG_ADDITIONAL-LOCATION
               {{- if .Values.yamlApplicationConfig }}
@@ -71,6 +68,9 @@ spec:
               {{- else if .Values.yamlApplicationConfigSecret }}
               value: /kafka-ui/{{ .Values.yamlApplicationConfigSecret.keyName | default "config.yml" }}
               {{- end }}
+            {{- end }}
+            {{- with .Values.env }}
+              {{- toYaml . | nindent 12 }}
             {{- end }}
             {{- range $key, $value := .Values.envs.secretMappings }}
             - name: {{ $key }}
@@ -128,6 +128,15 @@ spec:
               scheme: HTTPS
               {{- end }}
             {{- toYaml .Values.probes.readiness | nindent 12 }}
+          startupProbe:
+            httpGet:
+              {{- $contextPath := .Values.envs.config.SERVER_SERVLET_CONTEXT_PATH | default "" | printf "%s/actuator/health" | urlParse }}
+              path: {{ get $contextPath "path" }}
+              port: http
+              {{- if .Values.probes.useHttpsScheme }}
+              scheme: HTTPS
+              {{- end }}
+            {{- toYaml .Values.probes.startup | nindent 12 }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
