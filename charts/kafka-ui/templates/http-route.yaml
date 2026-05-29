@@ -34,8 +34,10 @@ spec:
     sectionName: {{ tpl ($parentRef.sectionName) $ }}
     {{- end }}
   {{- end }}
+  {{- with $route.hostnames }}
   hostnames:
-  {{- tpl (toYaml $route.hostnames) $ | nindent 2 }}
+  {{- tpl (toYaml .) $ | nindent 2 }}
+  {{- end }}
   rules:
   - matches:
     {{- tpl (toYaml $route.matches) $ | nindent 4 }}
@@ -44,7 +46,7 @@ spec:
     - group: ''
       kind: Service
       name: {{ include "kafka-ui.fullname" $ }}
-	  port: {{ (tpl (default "80" ($.Values.service.port)) $) | int }}
+      port: {{ (tpl (default "80" (toString $.Values.service.port)) $) | int }}
       weight: 1
     {{- end }}
     {{- if $route.filters }}
