@@ -1,0 +1,51 @@
+{{- if .Values.httproute.enabled -}}
+{{- $fullName := include "kafka-ui.fullname" . -}}
+{{- $svcPort := .Values.service.port -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ $fullName }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "kafka-ui.labels" . | nindent 4 }}
+    {{- with .Values.httproute.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.httproute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.httproute.parentRefs }}
+  {{- fail "httproute.parentRefs must contain at least one parentRef when httproute.enabled is true" }}
+  {{- end }}
+  parentRefs:
+    {{- toYaml .Values.httproute.parentRefs | nindent 4 }}
+  {{- with .Values.httproute.hostnames }}
+  hostnames:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.httproute.rules }}
+  {{- range .Values.httproute.rules }}
+    - {{- toYaml (omit . "backendRefs") | nindent 6 }}
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ $fullName }}
+          port: {{ $svcPort }}
+          weight: 1
+  {{- end }}
+  {{- else }}
+    - matches:
+        - path:
+            type: {{ .Values.httproute.pathType | default "PathPrefix" }}
+            value: {{ .Values.httproute.path | default "/" }}
+      backendRefs:
+        - group: ""
+          kind: Service
+          name: {{ $fullName }}
+          port: {{ $svcPort }}
+          weight: 1
+  {{- end }}
+{{- end }}
