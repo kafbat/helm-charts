@@ -1,0 +1,48 @@
+# Pre-commit hooks for kafbat/helm-charts
+#
+# Install once:   pre-commit install
+# Run on demand:  pre-commit run --all-files
+#
+# These mirror what CI enforces (see .github/workflows/), so contributors
+# catch issues locally before pushing. During a normal `git commit` the hooks
+# only run against the files you staged, so they won't churn unrelated files.
+repos:
+  # Render the chart templates and assert on the output. Mirrors the
+  # `unit-test` job in .github/workflows/helm.yaml. Requires the plugin:
+  #   helm plugin install https://github.com/helm-unittest/helm-unittest
+  - repo: local
+    hooks:
+      - id: helm-unittest
+        name: helm unittest (kafka-ui)
+        entry: helm unittest charts/kafka-ui
+        language: system
+        files: '^charts/kafka-ui/(templates/.*|values\.yaml|Chart\.yaml|tests/.*\.yaml)$'
+        pass_filenames: false
+        verbose: true
+
+  # Keep CONFIGURATION.md in sync with the @param metadata in values.yaml.
+  # Mirrors the "Update README from values.yaml metadata" workflow, which
+  # otherwise auto-commits this on the PR.
+  - repo: local
+    hooks:
+      - id: readme-generator-for-helm
+        name: regenerate CONFIGURATION.md from values.yaml
+        entry: npx --yes @bitnami/readme-generator-for-helm --values charts/kafka-ui/values.yaml --readme charts/kafka-ui/CONFIGURATION.md
+        language: system
+        files: '^charts/kafka-ui/(values\.yaml|CONFIGURATION\.md)$'
+        pass_filenames: false
+
+  # General hygiene. These act only on staged files during a normal commit.
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        # Helm templates rely on significant whitespace in places; leave them.
+        exclude: '^charts/.*/templates/.*$'
+      - id: end-of-file-fixer
+        exclude: '^charts/.*/templates/.*$'
+      - id: check-merge-conflict
+      - id: check-added-large-files
+      - id: check-yaml
+        # Helm templates are Go templates, not plain YAML — skip them.
+        exclude: '^charts/.*/templates/.*$'

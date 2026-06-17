@@ -1,0 +1,172 @@
+suite: Deployment
+
+# deployment.yaml computes checksum annotations by include-ing configmap.yaml,
+# configmap_fromValues.yaml and secret.yaml, so those templates must be loaded
+# for the suite to render. Those three emit no documents under most of these
+# cases, so each test selects the Deployment document and skips empty templates.
+templates:
+  - deployment.yaml
+  - configmap.yaml
+  - configmap_fromValues.yaml
+  - secret.yaml
+
+tests:
+  - it: renders a Deployment with the fullname and release namespace
+    release:
+      name: kafka-ui
+      namespace: kafka
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
+      - equal:
+          path: metadata.name
+          value: kafka-ui
+      - equal:
+          path: metadata.namespace
+          value: kafka
+
+  - it: sets replicas from replicaCount when autoscaling is disabled
+    set:
+      replicaCount: 3
+      autoscaling:
+        enabled: false
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: omits replicas when autoscaling is enabled
+    set:
+      autoscaling:
+        enabled: true
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+
+  - it: builds the image reference from registry, repository and appVersion
+    chart:
+      appVersion: v1.5.0
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/kafbat/kafka-ui:v1.5.0
+
+  - it: allows the image tag to be overridden
+    set:
+      image:
+        tag: v1.4.0
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/kafbat/kafka-ui:v1.4.0
+
+  - it: honours a global imageRegistry override
+    set:
+      global:
+        imageRegistry: my-mirror.example.com
+      image:
+        tag: v1.5.0
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: my-mirror.example.com/kafbat/kafka-ui:v1.5.0
+
+  - it: exposes the http container port 8080
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].name
+          value: http
+      - equal:
+          path: spec.template.spec.containers[0].ports[0].containerPort
+          value: 8080
+
+  - it: wires the service account name
+    release:
+      name: kafka-ui
+    set:
+      serviceAccount:
+        create: true
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: kafka-ui
+
+  - it: defines liveness, readiness and startup probes
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - exists:
+          path: spec.template.spec.containers[0].livenessProbe
+      - exists:
+          path: spec.template.spec.containers[0].readinessProbe
+      - exists:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: renders env entries supplied via env
+    set:
+      env:
+        - name: MY_VAR
+          value: my-value
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MY_VAR
+            value: my-value
+
+  - it: sets the config additional-location env when yamlApplicationConfig is set
+    set:
+      yamlApplicationConfig:
+        kafka:
+          clusters:
+            - name: local
+    documentSelector:
+      path: kind
+      value: Deployment
+      skipEmptyTemplates: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SPRING_CONFIG_ADDITIONAL-LOCATION
+            value: /kafka-ui/config.yml
