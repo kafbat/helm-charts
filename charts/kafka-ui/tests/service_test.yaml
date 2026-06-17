@@ -1,0 +1,80 @@
+suite: Service
+
+templates:
+  - service.yaml
+
+tests:
+  - it: renders a Service with the fullname and release namespace
+    release:
+      name: kafka-ui
+      namespace: kafka
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: kafka-ui
+      - equal:
+          path: metadata.namespace
+          value: kafka
+
+  - it: defaults to ClusterIP on port 80 named http
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+
+  - it: honours a custom service type and port
+    set:
+      service:
+        type: LoadBalancer
+        port: 8080
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
+
+  - it: sets nodePort only for NodePort services
+    set:
+      service:
+        type: NodePort
+        nodePort: 30080
+    asserts:
+      - equal:
+          path: spec.ports[0].nodePort
+          value: 30080
+
+  - it: sets loadBalancerIP only for LoadBalancer services
+    set:
+      service:
+        type: LoadBalancer
+        loadBalancerIP: 10.0.0.10
+    asserts:
+      - equal:
+          path: spec.loadBalancerIP
+          value: 10.0.0.10
+
+  - it: uses the selector labels for the pod selector
+    release:
+      name: kafka-ui
+    asserts:
+      - equal:
+          path: spec.selector["app.kubernetes.io/name"]
+          value: kafka-ui
+      - equal:
+          path: spec.selector["app.kubernetes.io/instance"]
+          value: kafka-ui

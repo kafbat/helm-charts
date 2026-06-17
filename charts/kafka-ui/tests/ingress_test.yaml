@@ -1,0 +1,146 @@
+suite: Ingress
+
+templates:
+  - ingress.yaml
+
+tests:
+  - it: does not render when ingress is disabled
+    set:
+      ingress:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a networking.k8s.io/v1 Ingress on modern clusters
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    release:
+      name: kafka-ui
+      namespace: kafka
+    set:
+      ingress:
+        enabled: true
+        host: kafka-ui.local
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Ingress
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: kafka-ui
+      - equal:
+          path: metadata.namespace
+          value: kafka
+
+  - it: routes the default path to the kafka-ui service
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    release:
+      name: kafka-ui
+    set:
+      service:
+        port: 8080
+      ingress:
+        enabled: true
+        host: kafka-ui.local
+        path: /
+        pathType: Prefix
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: kafka-ui.local
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: kafka-ui
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 8080
+      - equal:
+          path: spec.rules[0].http.paths[0].pathType
+          value: Prefix
+
+  - it: sets the ingressClassName when provided
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      ingress:
+        enabled: true
+        host: kafka-ui.local
+        ingressClassName: nginx
+    asserts:
+      - equal:
+          path: spec.ingressClassName
+          value: nginx
+
+  - it: renders a TLS block when tls is enabled
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      ingress:
+        enabled: true
+        host: kafka-ui.local
+        tls:
+          enabled: true
+          secretName: kafka-ui-tls
+    asserts:
+      - equal:
+          path: spec.tls[0].hosts[0]
+          value: kafka-ui.local
+      - equal:
+          path: spec.tls[0].secretName
+          value: kafka-ui-tls
+
+  - it: templates the host value
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    release:
+      name: kafka-ui
+    set:
+      ingress:
+        enabled: true
+        host: "{{ .Release.Name }}.example.com"
+    asserts:
+      - equal:
+          path: spec.rules[0].host
+          value: kafka-ui.example.com
+
+  - it: renders additional labels and annotations
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      apiVersions:
+        - networking.k8s.io/v1
+    set:
+      ingress:
+        enabled: true
+        host: kafka-ui.local
+        labels:
+          custom-label: custom-value
+        annotations:
+          nginx.ingress.kubernetes.io/rewrite-target: /
+    asserts:
+      - equal:
+          path: metadata.labels.custom-label
+          value: custom-value
+      - equal:
+          path: metadata.annotations["nginx.ingress.kubernetes.io/rewrite-target"]
+          value: /

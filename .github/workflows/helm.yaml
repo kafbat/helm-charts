@@ -7,6 +7,19 @@ on:
   paths:
    - "charts/**"
 jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v3
+
+      - name: Install helm-unittest plugin
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest
+
+      - name: Run helm unit tests
+        run: helm unittest charts/kafka-ui
+
   build-and-test:
     runs-on: ubuntu-latest
     steps:

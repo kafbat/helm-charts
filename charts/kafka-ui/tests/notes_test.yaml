@@ -1,0 +1,10 @@
+suite: NOTES
+
+templates:
+  - NOTES.txt
+
+tests:
+  - it: falls back to the ClusterIP port-forward note by default
+    asserts:
+      - matchRegexRaw:
+          pattern: "port-forward"
