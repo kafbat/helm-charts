@@ -58,6 +58,9 @@
 | `probes.readiness.initialDelaySeconds` | Initial delay seconds for readiness probe                 | `10`    |
 | `probes.readiness.periodSeconds`       | Period seconds for readiness probe                        | `30`    |
 | `probes.readiness.timeoutSeconds`      | Timeout seconds for readiness probe                       | `10`    |
+| `probes.startup.failureThreshold`      | Failure threshold for startup probe                       | `5`     |
+| `probes.startup.periodSeconds`         | Period seconds for startup probe                          | `40`    |
+| `probes.startup.timeoutSeconds`        | Timeout seconds for startup probe                         | `10`    |
 
 ### Security Context
 
