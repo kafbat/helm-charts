@@ -9,8 +9,10 @@ on:
 jobs:
   unit-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Helm tool installer
         uses: Azure/setup-helm@v3
 
