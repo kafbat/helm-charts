@@ -34,12 +34,12 @@
 | `envs.config`                    | Set of the environment variables to pass to Kafbat-UI                                                                                              | `{}`  |
 | `envs.secretMappings`            | The mapping of existing secret to env variable.                                                                                                    | `{}`  |
 | `envs.configMappings`            | The mapping of configmap and keyName to get env variable.                                                                                          | `{}`  |
-| `env`                            | Envs to be added to the Kafka-UI container                                                                                                         | `{}`  |
+| `env`                            | Envs to be added to the Kafka-UI container                                                                                                         | `[]`  |
 | `resources`                      | Set Kafka-UI container requests and limits for different resources like CPU or memory (essential for production workloads)                         | `{}`  |
-| `initContainers`                 | Add additional init containers to the Kafka-UI pods                                                                                                | `{}`  |
-| `volumeMounts`                   | Optionally specify additional volumeMounts for the kafka-UI container                                                                              | `{}`  |
-| `volumes`                        | Optionally specify additional volumes for the Kafka-UI pods                                                                                        | `{}`  |
-| `hostAliases`                    | Kafka-UI pods host aliases                                                                                                                         | `{}`  |
+| `initContainers`                 | Add additional init containers to the Kafka-UI pods                                                                                                | `[]`  |
+| `volumeMounts`                   | Optionally specify additional volumeMounts for the kafka-UI container                                                                              | `[]`  |
+| `volumes`                        | Optionally specify additional volumes for the Kafka-UI pods                                                                                        | `[]`  |
+| `hostAliases`                    | Kafka-UI pods host aliases                                                                                                                         | `[]`  |
 | `extraContainers`                | Specify additional containers in extraContainers.                                                                                                  | `""`  |
 
 ### Network Policies
