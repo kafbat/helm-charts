@@ -5,6 +5,10 @@
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
   {{- end }}
 {{- end }}
+{{- else if .Values.httproute.enabled }}
+{{- range $host := .Values.httproute.hostnames }}
+  {{ $.Values.httproute.scheme | default "http" }}://{{ $host }}{{ $.Values.httproute.path }}
+{{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "kafka-ui.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")

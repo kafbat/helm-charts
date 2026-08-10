@@ -263,6 +263,54 @@ ingress:
 
   ## @param ingress.succeedingPaths [array] Http paths to add to the Ingress after the default path
   succeedingPaths: []
+
+## Kafka-UI HTTPRoute configuration (Gateway API)
+## Alternative to Ingress. Only enable this if you have the Gateway API CRDs
+## installed and a Gateway controller running in your cluster.
+## ref: https://gateway-api.sigs.k8s.io/api-types/httproute/
+##
+httproute:
+  ## @param httproute.enabled Enable HTTPRoute (Gateway API) record generation for Kafka-UI
+  enabled: false
+  ## @param httproute.annotations [object] Additional annotations for the HTTPRoute resource
+  annotations: {}
+  ## @param httproute.labels [object] Labels for the HTTPRoute resource
+  labels: {}
+
+  ## @param httproute.parentRefs [array] Gateway references the HTTPRoute attaches to. At least one parentRef is required when httproute.enabled is true
+  ## e.g:
+  ## parentRefs:
+  ##   - name: my-gateway
+  ##     namespace: gateway-system
+  ##     sectionName: http
+  ##
+  parentRefs: []
+
+  ## @param httproute.hostnames [array] Hostnames to match for this HTTPRoute (templated, so you can use Helm expressions). e.g: ["kafka-ui.example.com"]
+  hostnames: []
+
+  ## @param httproute.pathType Path matching type used by the default rule (PathPrefix, Exact, or RegularExpression)
+  pathType: PathPrefix
+  ## @param httproute.path Path used by the default rule when no custom rules are specified
+  path: /
+  ## @param httproute.scheme Scheme for the HTTPRoute URL output (http or https)
+  scheme: http
+
+  ## @param httproute.rules [array] Advanced routing rules. If empty, a default rule matching httproute.path is generated. Any backendRefs in custom rules are ignored and the Kafka-UI service is always used.
+  ## e.g:
+  ## rules:
+  ##   - matches:
+  ##       - path:
+  ##           type: PathPrefix
+  ##           value: /
+  ##     filters:
+  ##       - type: RequestHeaderModifier
+  ##         requestHeaderModifier:
+  ##           add:
+  ##             - name: X-Custom-Header
+  ##               value: custom-value
+  ##
+  rules: []
 ## @param resources [object] Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)
 
 ## @section Scheduling

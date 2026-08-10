@@ -84,6 +84,15 @@
 | `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`        |
 | `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`        |
 | `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`        |
+| `httproute.enabled`        | Enable HTTPRoute (Gateway API) record generation for Kafka-UI                                                                    | `false`     |
+| `httproute.annotations`    | Additional annotations for the HTTPRoute resource                                                                                | `{}`        |
+| `httproute.labels`         | Labels for the HTTPRoute resource                                                                                                | `{}`        |
+| `httproute.parentRefs`     | Gateway references the HTTPRoute attaches to. At least one parentRef is required when httproute.enabled is true                  | `[]`        |
+| `httproute.hostnames`      | Hostnames to match for this HTTPRoute                                                                                            | `[]`        |
+| `httproute.pathType`       | Path matching type used by the default rule (PathPrefix, Exact, or RegularExpression)                                            | `PathPrefix`|
+| `httproute.path`           | Path used by the default rule when no custom rules are specified                                                                 | `/`         |
+| `httproute.scheme`         | Scheme for the HTTPRoute URL output (http or https)                                                                              | `http`      |
+| `httproute.rules`          | Advanced routing rules. If empty, a default rule matching httproute.path is generated. Any backendRefs in custom rules are ignored and the Kafka-UI service is always used. | `[]`        |
 | `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)             | `{}`        |
 
 ### Scheduling
