@@ -79,7 +79,7 @@ envs:
     #  name: kubernetes-configmap-name
     #  keyName: kubernetes-configmap-key
 ## @param env [object] Envs to be added to the Kafka-UI container
-env: {}
+env: []
 
 ## @param resources Set Kafka-UI container requests and limits for different resources like CPU or memory (essential for production workloads)
 resources:
@@ -94,16 +94,16 @@ resources:
 ## @param initContainers Add additional init containers to the Kafka-UI pods
 ## ref: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
 ## e.g:
-initContainers: {}
+initContainers: []
 
 ## @param volumeMounts [object] Optionally specify additional volumeMounts for the kafka-UI container
-volumeMounts: {}
+volumeMounts: []
 ## @param volumes [object] Optionally specify additional volumes for the Kafka-UI pods
-volumes: {}
+volumes: []
 ## @param hostAliases [object] Kafka-UI pods host aliases
 ## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
 ##
-hostAliases: {}
+hostAliases: []
 
 ## @param extraContainers Specify additional containers in extraContainers.
 ## For example, to add an authentication proxy to a kafka-ui pod.
