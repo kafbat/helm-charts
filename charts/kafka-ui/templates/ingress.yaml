@@ -27,7 +27,7 @@ spec:
   {{- if .Values.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ tpl .Values.ingress.host . }}
+        - {{ tpl .Values.ingress.host . | quote }}
       secretName: {{ .Values.ingress.tls.secretName }}
   {{- end }}
   {{- if .Values.ingress.ingressClassName }}
@@ -70,7 +70,7 @@ spec:
                   number: {{ .servicePort }}
           {{- end }}
 {{- if tpl .Values.ingress.host . }}
-      host: {{tpl .Values.ingress.host . }}
+      host: {{ tpl .Values.ingress.host . | quote }}
 {{- end }}
 {{- else -}}
           {{- range .Values.ingress.precedingPaths }}
@@ -92,7 +92,7 @@ spec:
               servicePort: {{ .servicePort }}
           {{- end }}
 {{- if tpl .Values.ingress.host . }}
-      host: {{ tpl .Values.ingress.host . }}
+      host: {{ tpl .Values.ingress.host . | quote }}
 {{- end }}
 {{- end }}
 {{- end }}
