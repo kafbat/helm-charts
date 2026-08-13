@@ -1,0 +1,79 @@
+{{- range $routeIdx, $route := .Values.httpRoutes }}
+{{- if $route.enabled }}
+{{- if or (not $route.gatewayParentRefs) (lt (len $route.gatewayParentRefs) 1) }}
+{{- fail (printf "httpRoute[%d].gatewayParentRefs must be defined and contain at least one gateway reference." $routeIdx) }}
+{{- end -}}
+
+{{- if or (not $route.matches) (lt (len $route.matches) 1) }}
+{{- fail (printf "httpRoute[%d].matches must be defined and contain at least one match element." $routeIdx) }}
+{{- end -}}
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ tpl ($route.nameOverride | default (printf "%s-%s" $.Chart.Name (first $route.gatewayParentRefs).name)) $ }}-httproute
+  labels:
+    {{- include "kafka-ui.labels" $ | nindent 4 }}
+    {{- if $route.labels }}
+    {{- tpl (toYaml $route.labels) $ | nindent 4 }}
+    {{- end }}
+  {{- if $route.annotations }}
+  annotations:
+    {{- tpl (toYaml $route.annotations) $ | nindent 4 }}
+  {{- end }}
+spec:
+  parentRefs:
+  {{- range $idx, $parentRef := $route.gatewayParentRefs }}
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    name: {{ tpl (required (printf "httpRoutes[%d].gatewayParentRefs[%d].name is required." $routeIdx $idx) $parentRef.name) $ }}
+    {{- if $parentRef.namespace }}
+    namespace: {{ tpl ($parentRef.namespace) $ }}
+    {{- end }}
+    {{- if $parentRef.sectionName }}
+    sectionName: {{ tpl ($parentRef.sectionName) $ }}
+    {{- end }}
+  {{- end }}
+  {{- with $route.hostnames }}
+  hostnames:
+  {{- tpl (toYaml .) $ | nindent 2 }}
+  {{- end }}
+  rules:
+  - matches:
+    {{- tpl (toYaml $route.matches) $ | nindent 4 }}
+    {{- if $route.shouldRouteToService }}
+    backendRefs:
+    - group: ''
+      kind: Service
+      name: {{ include "kafka-ui.fullname" $ }}
+      port: {{ (tpl (default "80" (toString $.Values.service.port)) $) | int }}
+      weight: 1
+    {{- end }}
+    {{- if $route.filters }}
+    filters:
+    {{- if $route.shouldStripPath }}
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: "/"
+    {{- end }}
+    {{- tpl (toYaml $route.filters) $ | nindent 4 }}
+    {{- else if $route.shouldStripPath }}
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: "/"
+    {{- end }}
+    {{- if $route.timeouts }}
+    timeouts:
+    {{- tpl (toYaml $route.timeouts) $ | nindent 4 }}
+    {{- end }}
+{{- /* Add a document separator if there is another item coming */ -}}
+{{- if lt (add1 $routeIdx) (len $.Values.httpRoutes) -}}
+---
+{{- end -}}
+{{- end -}}
+{{- end -}}
