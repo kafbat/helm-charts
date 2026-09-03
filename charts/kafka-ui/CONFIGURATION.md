@@ -35,6 +35,7 @@
 | `envs.secretMappings`            | The mapping of existing secret to env variable.                                                                                                    | `{}`  |
 | `envs.configMappings`            | The mapping of configmap and keyName to get env variable.                                                                                          | `{}`  |
 | `env`                            | Envs to be added to the Kafka-UI container                                                                                                         | `[]`  |
+| `lifecycle`                      | Lifecycle hooks for the Kafka-UI container, defaulting to a 5s preStop sleep so endpoints are drained before shutdown. Set `lifecycle: null` to disable | `{}`  |
 | `resources`                      | Set Kafka-UI container requests and limits for different resources like CPU or memory (essential for production workloads)                         | `{}`  |
 | `initContainers`                 | Add additional init containers to the Kafka-UI pods                                                                                                | `[]`  |
 | `volumeMounts`                   | Optionally specify additional volumeMounts for the kafka-UI container                                                                              | `[]`  |
