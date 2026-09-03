@@ -81,6 +81,19 @@ envs:
 ## @param env [object] Envs to be added to the Kafka-UI container
 env: []
 
+## @param lifecycle [object] Lifecycle hooks for the Kafka-UI container, defaulting to a 5s preStop sleep so endpoints are drained before shutdown. Set `lifecycle: null` to disable
+## ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+## Helm merges maps, so `lifecycle: {}` keeps the default below. Use `null` to drop the whole
+## block, or to swap a single handler: --set lifecycle.preStop.exec=null
+##
+lifecycle:
+  preStop:
+    exec:
+      command:
+        - /bin/sh
+        - -c
+        - sleep 5
+
 ## @param resources Set Kafka-UI container requests and limits for different resources like CPU or memory (essential for production workloads)
 resources:
   {}

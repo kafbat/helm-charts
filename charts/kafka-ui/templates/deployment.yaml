@@ -137,6 +137,10 @@ spec:
               scheme: HTTPS
               {{- end }}
             {{- toYaml .Values.probes.startup | nindent 12 }}
+          {{- with .Values.lifecycle }}
+          lifecycle:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           {{- if or .Values.yamlApplicationConfig .Values.volumeMounts .Values.yamlApplicationConfigConfigMap .Values.yamlApplicationConfigSecret }}
