@@ -36,6 +36,9 @@ serviceAccount:
 ## @section Application configuration
 ## @param existingConfigMap [string] Name of the existing ConfigMap with kafbat-ui environment variables
 existingConfigMap: ""
+## @param configMap.annotations Additional annotations for the ConfigMap(s) created by this chart (e.g. for Vault Agent or other controllers that rely on ConfigMap annotations)
+configMap:
+  annotations: {}
 ## @param yamlApplicationConfig Kafbat-UI config in Yaml format
 yamlApplicationConfig:
   {}
