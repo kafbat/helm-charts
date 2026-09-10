@@ -20,6 +20,7 @@
 | `serviceAccount.name`        | The name of the ServiceAccount to use.               | `""`   |
 | `serviceAccount.create`      | Specifies whether a ServiceAccount should be created | `true` |
 | `serviceAccount.annotations` | Additional Service Account annotations               | `{}`   |
+| `serviceAccount.automountServiceAccountToken` | Specifies whether the ServiceAccount token should be automatically mounted into the Kafka-UI pod. Kafka-UI does not call the Kubernetes API by default, so this is disabled to reduce attack surface. | `false` |
 
 ### Application configuration
 
