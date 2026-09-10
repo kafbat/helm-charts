@@ -28,12 +28,17 @@ serviceAccount:
   create: true
   ## @param serviceAccount.annotations Additional Service Account annotations
   annotations: {}
+  ## @param serviceAccount.automountServiceAccountToken Specifies whether the ServiceAccount token should be automatically mounted into the Kafka-UI pod. Kafka-UI does not call the Kubernetes API by default, so this is disabled to reduce attack surface.
+  automountServiceAccountToken: false
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
 
 ## @section Application configuration
 ## @param existingConfigMap [string] Name of the existing ConfigMap with kafbat-ui environment variables
 existingConfigMap: ""
+## @param configMap.annotations Additional annotations for the ConfigMap(s) created by this chart (e.g. for Vault Agent or other controllers that rely on ConfigMap annotations)
+configMap:
+  annotations: {}
 ## @param yamlApplicationConfig Kafbat-UI config in Yaml format
 yamlApplicationConfig:
   {}

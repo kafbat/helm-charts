@@ -20,12 +20,14 @@
 | `serviceAccount.name`        | The name of the ServiceAccount to use.               | `""`   |
 | `serviceAccount.create`      | Specifies whether a ServiceAccount should be created | `true` |
 | `serviceAccount.annotations` | Additional Service Account annotations               | `{}`   |
+| `serviceAccount.automountServiceAccountToken` | Specifies whether the ServiceAccount token should be automatically mounted into the Kafka-UI pod. Kafka-UI does not call the Kubernetes API by default, so this is disabled to reduce attack surface. | `false` |
 
 ### Application configuration
 
 | Name                             | Description                                                                                                                                        | Value |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ----- |
 | `existingConfigMap`              | Name of the existing ConfigMap with kafbat-ui environment variables                                                                                | `""`  |
+| `configMap.annotations`          | Additional annotations for the ConfigMap(s) created by this chart (e.g. for Vault Agent or other controllers that rely on ConfigMap annotations)   | `{}`  |
 | `yamlApplicationConfig`          | Kafbat-UI config in Yaml format                                                                                                                    | `{}`  |
 | `yamlApplicationConfigConfigMap` | Map with name and keyName keys, name refers to the existing ConfigMap, keyName refers to the ConfigMap key with Kafbat-UI config in Yaml format    | `{}`  |
 | `yamlApplicationConfigSecret`    | Secret with name and keyName keys, name refers to the existing ConfigMap, keyName refers to the ConfigMap key with Kafbat-UI config in Yaml format | `{}`  |
