@@ -28,9 +28,9 @@ spec:
       {{- with .Values.podAnnotations }}
           {{- toYaml . | nindent 8 }}
       {{- end }}
-        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
-        checksum/configFromValues: {{ include (print $.Template.BasePath "/configmap_fromValues.yaml") . | sha256sum }}
-        checksum/secret: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        checksum/config: {{ include "kafka-ui.configMapOrSecretContentHash" (dict "ctx" . "name" "/configmap.yaml") }}
+        checksum/configFromValues: {{ include "kafka-ui.configMapOrSecretContentHash" (dict "ctx" . "name" "/configmap_fromValues.yaml") }}
+        checksum/secret: {{ include "kafka-ui.configMapOrSecretContentHash" (dict "ctx" . "name" "/secret.yaml") }}
       labels:
         {{- include "kafka-ui.selectorLabels" . | nindent 8 }}
         {{- if .Values.podLabels }}

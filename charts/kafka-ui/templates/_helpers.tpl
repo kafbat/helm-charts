@@ -82,3 +82,15 @@ This allows us to check if the registry of the image is specified or not.
 {{- end }}
 {{- end -}}
 
+{{/*
+Compute a ConfigMap or Secret checksum from its data only, for the checksum/* pod annotations.
+The full manifest carries the helm.sh/chart label, which changes on every chart version bump.
+The template may render several documents, so hash the data of each one.
+*/}}
+{{- define "kafka-ui.configMapOrSecretContentHash" -}}
+{{- $data := list -}}
+{{- range regexSplit "(?m)^---$" (include (print .ctx.Template.BasePath .name) .ctx) -1 -}}
+{{- $data = append $data (pick (fromYaml .) "data" "stringData") -}}
+{{- end -}}
+{{ $data | toYaml | sha256sum }}
+{{- end -}}
