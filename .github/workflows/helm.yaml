@@ -44,6 +44,9 @@ jobs:
             helm template \
               --kube-version "$version" \
               --set ingress.enabled=true \
+              --set httproute.enabled=true \
+              --set 'httproute.hostnames[0]=kafka-ui.local' \
+              --set 'httproute.parentRefs[0].name=my-gateway' \
               charts/kafka-ui \
               -f charts/kafka-ui/values.yaml | \
             docker run --rm -i ghcr.io/yannh/kubeconform:latest \

@@ -58,6 +58,9 @@
 | `probes.readiness.initialDelaySeconds` | Initial delay seconds for readiness probe                 | `10`    |
 | `probes.readiness.periodSeconds`       | Period seconds for readiness probe                        | `30`    |
 | `probes.readiness.timeoutSeconds`      | Timeout seconds for readiness probe                       | `10`    |
+| `probes.startup.failureThreshold`      | Failure threshold for startup probe                       | `5`     |
+| `probes.startup.periodSeconds`         | Period seconds for startup probe                          | `40`    |
+| `probes.startup.timeoutSeconds`        | Timeout seconds for startup probe                         | `10`    |
 
 ### Security Context
 
@@ -68,23 +71,32 @@
 
 ### Traffic Exposure Parameters
 
-| Name                       | Description                                                                                                                      | Value       |
-| -------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ----------- |
-| `service.labels`           | Labels for the Service                                                                                                           | `{}`        |
-| `service.type`             | Kafka-UI service type                                                                                                            | `ClusterIP` |
-| `service.port`             | Kafka-UI pod port number                                                                                                         | `80`        |
-| `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                    | `""`        |
-| `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations. | `{}`        |
-| `ingress.labels`           | Labels for the Ingress                                                                                                           | `{}`        |
-| `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                    | `""`        |
-| `ingress.path`             | Default path for the ingress record                                                                                              | `/`         |
-| `ingress.pathType`         | Ingress path type                                                                                                                | `Prefix`    |
-| `ingress.host`             | Default hostname for the ingress record                                                                                          | `""`        |
-| `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                        | `false`     |
-| `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                    | `""`        |
-| `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                         | `[]`        |
-| `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                          | `[]`        |
-| `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)             | `{}`        |
+| Name                       | Description                                                                                                                                                                 | Value        |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| `service.labels`           | Labels for the Service                                                                                                                                                      | `{}`         |
+| `service.type`             | Kafka-UI service type                                                                                                                                                       | `ClusterIP`  |
+| `service.port`             | Kafka-UI pod port number                                                                                                                                                    | `80`         |
+| `ingress.enabled`          | Enable ingress record generation for Kafka-UI                                                                                                                               | `""`         |
+| `ingress.annotations`      | Additional annotations for the Ingress resource. To enable certificate autogeneration, place here your cert-manager annotations.                                            | `{}`         |
+| `ingress.labels`           | Labels for the Ingress                                                                                                                                                      | `{}`         |
+| `ingress.ingressClassName` | IngressClass that will be be used to implement the Ingress (Kubernetes 1.18+)                                                                                               | `""`         |
+| `ingress.path`             | Default path for the ingress record                                                                                                                                         | `/`          |
+| `ingress.pathType`         | Ingress path type                                                                                                                                                           | `Prefix`     |
+| `ingress.host`             | Default hostname for the ingress record                                                                                                                                     | `""`         |
+| `ingress.tls.enabled`      | Enable TLS configuration for the host defined at `ingress.host` parameter                                                                                                   | `false`      |
+| `ingress.tls.secretName`   | The name of a pre-created Secret containing a TLS private key and certificate                                                                                               | `""`         |
+| `ingress.precedingPaths`   | HTTP paths to add to the Ingress before the default path                                                                                                                    | `[]`         |
+| `ingress.succeedingPaths`  | Http paths to add to the Ingress after the default path                                                                                                                     | `[]`         |
+| `httproute.enabled`        | Enable HTTPRoute (Gateway API) record generation for Kafka-UI                                                                                                               | `false`      |
+| `httproute.annotations`    | Additional annotations for the HTTPRoute resource                                                                                                                           | `{}`         |
+| `httproute.labels`         | Labels for the HTTPRoute resource                                                                                                                                           | `{}`         |
+| `httproute.parentRefs`     | Gateway references the HTTPRoute attaches to. At least one parentRef is required when httproute.enabled is true                                                             | `[]`         |
+| `httproute.hostnames`      | Hostnames to match for this HTTPRoute. e.g: ["kafka-ui.example.com"]                                                                                                       | `[]`         |
+| `httproute.pathType`       | Path matching type used by the default rule (PathPrefix, Exact, or RegularExpression)                                                                                       | `PathPrefix` |
+| `httproute.path`           | Path used by the default rule when no custom rules are specified                                                                                                            | `/`          |
+| `httproute.scheme`         | Scheme for the HTTPRoute URL output (http or https)                                                                                                                         | `http`       |
+| `httproute.rules`          | Advanced routing rules. If empty, a default rule matching httproute.path is generated. Any backendRefs in custom rules are ignored and the Kafka-UI service is always used. | `[]`         |
+| `resources`                | Set Kafka-UI pod requests and limits for different resources like CPU or memory (essential for production workloads)                                                        | `{}`         |
 
 ### Scheduling
 

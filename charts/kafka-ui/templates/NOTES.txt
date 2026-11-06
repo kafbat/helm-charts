@@ -5,6 +5,38 @@
   http{{ if $.Values.ingress.tls }}s{{ end }}://{{ $host.host }}{{ . }}
   {{- end }}
 {{- end }}
+{{- else if .Values.httproute.enabled }}
+{{- $scheme := .Values.httproute.scheme | default "http" }}
+{{- $paths := list }}
+{{- if .Values.httproute.rules }}
+{{- range .Values.httproute.rules }}
+{{- range .matches }}
+{{- with .path }}
+{{- if ne (.type | default "PathPrefix") "RegularExpression" }}
+{{- $paths = append $paths (.value | default "/") }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- else }}
+{{- $paths = append $paths (.Values.httproute.path | default "/") }}
+{{- end }}
+{{- if .Values.httproute.hostnames }}
+{{- range $host := .Values.httproute.hostnames }}
+{{- if $paths }}
+{{- range $path := $paths }}
+  {{ $scheme }}://{{ $host }}{{ $path }}
+{{- end }}
+{{- else }}
+  {{ $scheme }}://{{ $host }} (paths are defined by httproute.rules matches)
+{{- end }}
+{{- end }}
+{{- else }}
+  The HTTPRoute does not define any hostnames, so it matches the hostnames
+  allowed by the Gateway listener referenced in httproute.parentRefs.
+  Find the listener address by running:
+  kubectl get gateway -n <gateway-namespace> <gateway-name>
+{{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
   export NODE_PORT=$(kubectl get --namespace {{ .Release.Namespace }} -o jsonpath="{.spec.ports[0].nodePort}" services {{ include "kafka-ui.fullname" . }})
   export NODE_IP=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath="{.items[0].status.addresses[0].address}")
